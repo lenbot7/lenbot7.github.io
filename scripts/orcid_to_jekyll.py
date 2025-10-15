@@ -21,7 +21,6 @@ def parse_pub_date(pub_date):
     return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
 
 def extract_ids(external_ids):
-    # Returns dict of ids (doi, pmid, pmc, etc)
     ids = {}
     for extid in external_ids.get("external-id", []):
         id_type = extid.get("external-id-type", "").lower()
@@ -49,10 +48,11 @@ def write_post(work, output_dir):
         url = doi_url
 
     front_matter = {
+        "type": "post",
         "title": title,
         "date": pub_date,
         "journal": journal,
-        "type": pub_type,
+        "publication_type": pub_type,
         "doi": doi,
         "pmid": pmid,
         "pmc": pmc,
@@ -72,9 +72,9 @@ def write_post(work, output_dir):
         f.write("\n")
 
 def main():
-    parser = argparse.ArgumentParser(description="Fetch ORCID works and create Jekyll posts")
-    parser.add_argument("--orcid-id", required=True, help="The ORCID iD of the author")
-    parser.add_argument("--output-dir", default="_posts", help="Directory to write Jekyll posts")
+    parser = argparse.ArgumentParser(description="Fetch ORCID works and create Jekyll posts.")
+    parser.add_argument("--orcid-id", required=True, help="The ORCID iD of the author.")
+    parser.add_argument("--output-dir", default="_posts", help="Directory to write Jekyll posts.")
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
@@ -89,7 +89,7 @@ def main():
         for work in group.get("work-summary", []):
             write_post(work, args.output_dir)
             count += 1
-    print(f"All posts written to {args.output_dir}, nya~ ({count} publications)")
+    print(f"All posts written to {args.output_dir} ({count} publications)")
 
 if __name__ == "__main__":
     main()
