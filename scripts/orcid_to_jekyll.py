@@ -48,7 +48,7 @@ def write_post(work, output_dir):
         url = doi_url
 
     front_matter = {
-        "type": "post",
+        "layout": "post",
         "title": title,
         "date": pub_date,
         "journal": journal,
