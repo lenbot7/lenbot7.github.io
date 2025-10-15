@@ -72,9 +72,9 @@ def write_post(work, output_dir):
         f.write("\n")
 
 def main():
-    parser = argparse.ArgumentParser(description="Fetch ORCID works and create Jekyll posts, meow~ :3")
-    parser.add_argument("--orcid-id", required=True, help="The ORCID iD of the author, nya!")
-    parser.add_argument("--output-dir", default="_posts", help="Directory to write Jekyll posts, nya~")
+    parser = argparse.ArgumentParser(description="Fetch ORCID works and create Jekyll posts")
+    parser.add_argument("--orcid-id", required=True, help="The ORCID iD of the author")
+    parser.add_argument("--output-dir", default="_posts", help="Directory to write Jekyll posts")
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
