@@ -3,6 +3,15 @@ import yaml
 import os
 import argparse
 
+def get_value(field, default=""):
+    """Safely extract .get('value') if field is a dict, else return field or default."""
+    if isinstance(field, dict):
+        return str(field.get("value", default))
+    elif field is None:
+        return str(default)
+    else:
+        return str(field)
+
 def make_slug(title):
     return (
         "".join(c if c.isalnum() or c in "-_" else "-" for c in title.lower())
@@ -11,9 +20,9 @@ def make_slug(title):
     )
 
 def parse_pub_date(pub_date):
-    year = pub_date.get("year", {}).get("value", "2000") if pub_date else "2000"
-    month = pub_date.get("month", {}).get("value", "01") if pub_date and pub_date.get("month") else "01"
-    day = pub_date.get("day", {}).get("value", "01") if pub_date and pub_date.get("day") else "01"
+    year = get_value(pub_date.get("year") if pub_date else None, "2000")
+    month = get_value(pub_date.get("month") if pub_date else None, "01")
+    day = get_value(pub_date.get("day") if pub_date else None, "01")
     if month == "00" or not month.isdigit() or int(month) < 1 or int(month) > 12:
         month = "01"
     if not day or not day.isdigit() or int(day) < 1 or int(day) > 31:
@@ -23,27 +32,27 @@ def parse_pub_date(pub_date):
 def extract_ids(external_ids):
     ids = {}
     for extid in external_ids.get("external-id", []):
-        id_type = extid.get("external-id-type", "").lower()
-        id_value = extid.get("external-id-value", "")
-        id_url = extid.get("external-id-url", "")
+        id_type = get_value(extid.get("external-id-type")).lower()
+        id_value = get_value(extid.get("external-id-value"))
+        id_url = get_value(extid.get("external-id-url"))
         if id_type and id_value:
             ids[id_type] = {"value": id_value, "url": id_url}
     return ids
 
 def write_post(work, output_dir):
-    title = work.get("title", {}).get("title", {}).get("value", "Untitled Publication")
+    title = get_value(work.get("title", {}).get("title"))
     pub_date = parse_pub_date(work.get("publication-date"))
     slug = make_slug(title)
     filename = f"{pub_date}-{slug}.md"
 
-    journal = work.get("journal-title", "")
-    pub_type = work.get("type", "")
+    journal = get_value(work.get("journal-title"))
+    pub_type = get_value(work.get("type"))
     ids = extract_ids(work.get("external-ids", {}))
     doi = ids.get("doi", {}).get("value", "")
     doi_url = ids.get("doi", {}).get("url", "")
     pmid = ids.get("pmid", {}).get("value", "")
     pmc = ids.get("pmc", {}).get("value", "")
-    url = work.get("url", "")
+    url = get_value(work.get("url"))
     if not url and doi_url:
         url = doi_url
 
