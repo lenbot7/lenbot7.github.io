@@ -67,6 +67,7 @@ def write_post(work, output_dir):
         "pmc": pmc,
         "url": url,
         "tags": ["publication"],
+        "categories": ["publication"],
     }
 
     with open(os.path.join(output_dir, filename), "w", encoding="utf-8") as f:
