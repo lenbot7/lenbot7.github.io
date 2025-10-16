@@ -2,15 +2,65 @@
 layout: about
 title: Lab Info
 banner: "/assets/images/banners/home.jpeg"
-banner_slideshow:
-  - "/assets/images/banners/home.jpeg"
-  - "/assets/images/banners/home-1.jpeg"
-  - "/assets/images/banners/home-2.jpeg"
-  - "/assets/images/banners/home-3.jpeg"
-banner_slideshow_interval: 5000
 ---
 
 <h2>About the Lab</h2>
 
+<div class="content-slideshow">
+  <div class="content-slideshow-container">
+    <div class="content-slide active" style="background-image: url(/assets/images/banners/home.jpeg)"></div>
+    <div class="content-slide" style="background-image: url(/assets/images/banners/home-1.jpeg)"></div>
+    <div class="content-slide" style="background-image: url(/assets/images/banners/home-2.jpeg)"></div>
+    <div class="content-slide" style="background-image: url(/assets/images/banners/home-3.jpeg)"></div>
+  </div>
+</div>
+
+<style>
+  .content-slideshow {
+    width: 100%;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+  
+  .content-slideshow-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background-color: #333;
+  }
+  
+  .content-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  .content-slide.active {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  (function() {
+    var slides = document.querySelectorAll('.content-slide');
+    var currentSlide = 0;
+    var interval = 5000; // 5 seconds
+    
+    function nextSlide() {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }
+    
+    // Auto advance slides
+    if (slides.length > 1) {
+      setInterval(nextSlide, interval);
+    }
+  })();
+</script>
 
 <p> lorem ipsum</p>
